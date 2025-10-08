@@ -1,0 +1,182 @@
+<% content_for :title, "Dashboard - MoodTracker" %>
+
+<div class="hero">
+  <div class="container">
+    <h1 class="hero-title">Welcome Back, <%= current_user.display_name %>!</h1>
+    <p class="hero-subtitle">Track your mental wellness journey with confidence</p>
+  </div>
+</div>
+
+<div class="container" style="padding: 40px 20px;">
+  <div class="grid grid-4 mb-4">
+    <div class="stat-card">
+      <span class="stat-number"><%= @average_mood %></span>
+      <span class="stat-label">30-Day Average</span>
+    </div>
+    
+    <div class="stat-card">
+      <span class="stat-number"><%= @wellness_score %></span>
+      <span class="stat-label">Wellness Score</span>
+    </div>
+    
+    <div class="stat-card">
+      <span class="stat-number"><%= @streak_count %></span>
+      <span class="stat-label">Day Streak</span>
+    </div>
+    
+    <div class="stat-card">
+      <span class="stat-number">
+        <% case @mood_trend %>
+        <% when 'improving' %>
+          ↗️
+        <% when 'declining' %>
+          ↘️
+        <% else %>
+          ➡️
+        <% end %>
+      </span>
+      <span class="stat-label">Mood Trend</span>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Quick Mood Entry</h2>
+        <p class="card-subtitle">How are you feeling right now?</p>
+      </div>
+      
+      <%= form_with url: create_quick_mood_entries_path, method: :post, local: false, id: "quick-mood-form" do |form| %>
+        <div class="mood-selector" id="mood-selector">
+          <% (1..10).each do |level| %>
+            <div class="mood-option" data-mood="<%= level %>">
+              <%= level %>
+            </div>
+          <% end %>
+        </div>
+        
+        <%= form.hidden_field :mood_level, id: "selected-mood" %>
+        
+        <div class="form-group">
+          <%= form.label :notes, "Quick Note (Optional)", class: "form-label" %>
+          <%= form.text_area :notes, rows: 3, class: "form-control", placeholder: "What's on your mind?" %>
+        </div>
+        
+        <%= form.submit "Log Mood", class: "btn btn-primary", style: "width: 100%;" %>
+      <% end %>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Recent Entries</h2>
+        <p class="card-subtitle">Your last 7 mood logs</p>
+      </div>
+      
+      <% if @recent_entries.any? %>
+        <% @recent_entries.each do |entry| %>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 2px solid var(--neo-gray-light);">
+            <div>
+              <strong style="font-size: 18px; color: var(--therapeutic-green);"><%= entry.mood_level %>/10</strong>
+              <span style="margin-left: 12px; color: var(--neo-gray-medium);"><%= entry.logged_at.strftime("%m/%d %I:%M %p") %></span>
+            </div>
+            <div>
+              <% if entry.triggers.any? %>
+                <% entry.triggers.limit(2).each do |trigger| %>
+                  <span class="badge badge-secondary" style="margin-left: 4px;"><%= trigger.name %></span>
+                <% end %>
+                <% if entry.triggers.count > 2 %>
+                  <span class="badge" style="margin-left: 4px;">+<%= entry.triggers.count - 2 %></span>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+        
+        <div style="text-align: center; margin-top: 20px;">
+          <%= link_to "View All Entries", mood_entries_path, class: "btn btn-outline" %>
+        </div>
+      <% else %>
+        <div style="text-align: center; padding: 40px 0; color: var(--neo-gray-medium);">
+          <p style="font-size: 18px; margin-bottom: 16px;">No mood entries yet</p>
+          <p>Start tracking your mood to see insights here</p>
+          <%= link_to "Log Your First Mood", new_mood_entry_path, class: "btn btn-primary", style: "margin-top: 16px;" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% if @mood_distribution.values.sum > 0 %>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">30-Day Mood Distribution</h2>
+        <p class="card-subtitle">How your moods have been distributed</p>
+      </div>
+      
+      <div class="grid grid-5" style="text-align: center;">
+        <% @mood_distribution.each do |label, count| %>
+          <div>
+            <div style="font-size: 24px; font-weight: 900; color: var(--therapeutic-green); margin-bottom: 8px;">
+              <%= count %>
+            </div>
+            <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--neo-gray-medium);">
+              <%= label %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @recent_triggers.any? %>
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Common Triggers</h2>
+        <p class="card-subtitle">Most frequent triggers this month</p>
+      </div>
+      
+      <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+        <% @recent_triggers.each do |trigger_name, count| %>
+          <div style="display: flex; align-items: center; background-color: var(--neo-gray-light); padding: 8px 16px; border: 2px solid var(--neo-black);">
+            <span style="font-weight: 700; margin-right: 8px;"><%= trigger_name %></span>
+            <span class="badge badge-primary"><%= count %></span>
+          </div>
+        <% end %>
+      </div>
+      
+      <div style="text-align: center; margin-top: 20px;">
+        <%= link_to "View All Triggers", triggers_path, class: "btn btn-outline" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div style="text-align: center; margin-top: 40px;">
+    <%= link_to "Detailed Analytics", analytics_index_path, class: "btn btn-secondary", style: "margin-right: 16px;" %>
+    <%= link_to "Mental Health Resources", resources_path, class: "btn btn-accent" %>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const moodOptions = document.querySelectorAll('.mood-option');
+  const selectedMoodInput = document.getElementById('selected-mood');
+  const quickMoodForm = document.getElementById('quick-mood-form');
+  
+  moodOptions.forEach(option => {
+    option.addEventListener('click', function() {
+      moodOptions.forEach(opt => opt.classList.remove('selected'));
+      this.classList.add('selected');
+      selectedMoodInput.value = this.dataset.mood;
+    });
+  });
+  
+  if (quickMoodForm) {
+    quickMoodForm.addEventListener('submit', function(e) {
+      if (!selectedMoodInput.value) {
+        e.preventDefault();
+        alert('Please select a mood level first!');
+        return;
+      }
+    });
+  }
+});
+</script>

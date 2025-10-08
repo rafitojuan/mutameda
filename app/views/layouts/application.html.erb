@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Mutameda" %></title>
+    <title><%= content_for(:title) || "MoodTracker" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -10,19 +10,52 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <% if user_signed_in? %>
+      <nav class="navbar">
+        <div class="container">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <%= link_to "MoodTracker", root_path, class: "navbar-brand" %>
+            
+            <ul class="navbar-nav">
+              <li><%= link_to "Dashboard", root_path, class: "nav-link #{'active' if current_page?(root_path)}" %></li>
+              <li><%= link_to "Log Mood", new_mood_entry_path, class: "nav-link #{'active' if current_page?(new_mood_entry_path)}" %></li>
+              <li><%= link_to "Analytics", analytics_index_path, class: "nav-link #{'active' if current_page?(analytics_index_path)}" %></li>
+              <li><%= link_to "Resources", resources_path, class: "nav-link #{'active' if current_page?(resources_path)}" %></li>
+              <li><%= link_to "Profile", profile_root_path, class: "nav-link #{'active' if current_page?(profile_root_path)}" %></li>
+              <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link" %></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+
+    <main>
+      <% if notice %>
+        <div class="container">
+          <div class="alert alert-success"><%= notice %></div>
+        </div>
+      <% end %>
+      
+      <% if alert %>
+        <div class="container">
+          <div class="alert alert-danger"><%= alert %></div>
+        </div>
+      <% end %>
+
+      <%= yield %>
+    </main>
   </body>
 </html>

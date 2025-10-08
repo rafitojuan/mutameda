@@ -1,0 +1,160 @@
+<% content_for :title, "MoodTracker - Track Your Mental Wellness Journey" %>
+
+<div class="hero">
+  <div class="container">
+    <h1 class="hero-title">Welcome to MoodTracker</h1>
+    <p class="hero-subtitle">Your personal companion for mental wellness and mood tracking</p>
+    <div class="hero-actions">
+      <%= link_to "Get Started", new_user_registration_path, class: "btn btn-primary btn-lg" %>
+      <%= link_to "Sign In", new_user_session_path, class: "btn btn-secondary btn-lg" %>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding: 60px 20px;">
+  <div class="grid grid-3">
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Track Your Mood</h3>
+      <p>Log your daily mood, energy levels, and emotional triggers to understand patterns in your mental wellness journey.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>Analyze Trends</h3>
+      <p>Visualize your mood patterns over time with detailed analytics and insights to help improve your wellbeing.</p>
+    </div>
+    
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>Get Resources</h3>
+      <p>Access curated mental health resources, tips, and strategies tailored to your specific needs and goals.</p>
+    </div>
+  </div>
+
+  <div class="text-center" style="margin-top: 60px;">
+    <h2>Start Your Wellness Journey Today</h2>
+    <p style="font-size: 1.2rem; color: #666; margin-bottom: 30px;">
+      Join thousands of users who are taking control of their mental health with MoodTracker
+    </p>
+    <%= link_to "Create Free Account", new_user_registration_path, class: "btn btn-primary btn-xl" %>
+  </div>
+</div>
+
+<style>
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  margin-bottom: 40px;
+  opacity: 0.9;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 15px 30px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-primary {
+  background: #4f46e5;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-lg {
+  font-size: 1.1rem;
+}
+
+.btn-xl {
+  font-size: 1.2rem;
+  padding: 20px 40px;
+}
+
+.grid {
+  display: grid;
+  gap: 30px;
+}
+
+.grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.feature-card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #1f2937;
+}
+
+.feature-card p {
+  color: #6b7280;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+</style>
